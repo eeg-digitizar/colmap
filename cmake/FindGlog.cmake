@@ -90,6 +90,8 @@ find_library(GLOG_LIBRARIES
     NAMES
     glog
     libglog
+    glogd # find debug versions
+    libglogd
     PATHS
     ${GLOG_LIBRARY_DIR_HINTS}
     ${GLOG_CHECK_LIBRARY_DIRS}

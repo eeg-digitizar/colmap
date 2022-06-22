@@ -32,6 +32,8 @@
 #ifndef COLMAP_SRC_FEATURE_SIFT_H_
 #define COLMAP_SRC_FEATURE_SIFT_H_
 
+#include <exception>
+
 #include "estimators/two_view_geometry.h"
 #include "feature/types.h"
 #include "util/bitmap.h"
@@ -110,7 +112,7 @@ struct SiftExtractionOptions {
   };
   Normalization normalization = Normalization::L1_ROOT;
 
-  bool Check() const;
+  inline bool Check() const { return true; }
 };
 
 struct SiftMatchingOptions {
@@ -161,33 +163,41 @@ struct SiftMatchingOptions {
   // Whether to perform guided matching, if geometric verification succeeds.
   bool guided_matching = false;
 
-  bool Check() const;
+  inline bool Check() const { return true; }
 };
 
 // Extract SIFT features for the given image on the CPU. Only extract
 // descriptors if the given input is not NULL.
-bool ExtractSiftFeaturesCPU(const SiftExtractionOptions& options,
-                            const Bitmap& bitmap, FeatureKeypoints* keypoints,
-                            FeatureDescriptors* descriptors);
-bool ExtractCovariantSiftFeaturesCPU(const SiftExtractionOptions& options,
-                                     const Bitmap& bitmap,
-                                     FeatureKeypoints* keypoints,
-                                     FeatureDescriptors* descriptors);
+inline bool ExtractSiftFeaturesCPU(const SiftExtractionOptions& options,
+                                   const Bitmap& bitmap,
+                                   FeatureKeypoints* keypoints,
+                                   FeatureDescriptors* descriptors) {
+  throw std::logic_error("Not implemented");
+}
+inline bool ExtractCovariantSiftFeaturesCPU(
+    const SiftExtractionOptions& options, const Bitmap& bitmap,
+    FeatureKeypoints* keypoints, FeatureDescriptors* descriptors) {
+  throw std::logic_error("Not implemented");
+}
 
 // Create a SiftGPU feature extractor. The same SiftGPU instance can be used to
 // extract features for multiple images. Note a OpenGL context must be made
 // current in the thread of the caller. If the gpu_index is not -1, the CUDA
 // version of SiftGPU is used, which produces slightly different results
 // than the OpenGL implementation.
-bool CreateSiftGPUExtractor(const SiftExtractionOptions& options,
-                            SiftGPU* sift_gpu);
+inline bool CreateSiftGPUExtractor(const SiftExtractionOptions& options,
+                                   SiftGPU* sift_gpu) {
+  throw std::logic_error("Not implemented");
+}
 
 // Extract SIFT features for the given image on the GPU.
 // SiftGPU must already be initialized using `CreateSiftGPU`.
-bool ExtractSiftFeaturesGPU(const SiftExtractionOptions& options,
-                            const Bitmap& bitmap, SiftGPU* sift_gpu,
-                            FeatureKeypoints* keypoints,
-                            FeatureDescriptors* descriptors);
+inline bool ExtractSiftFeaturesGPU(const SiftExtractionOptions& options,
+                                   const Bitmap& bitmap, SiftGPU* sift_gpu,
+                                   FeatureKeypoints* keypoints,
+                                   FeatureDescriptors* descriptors) {
+  throw std::logic_error("Not implemented");
+}
 
 // Load keypoints and descriptors from text file in the following format:
 //
@@ -206,52 +216,68 @@ bool ExtractSiftFeaturesGPU(const SiftExtractionOptions& options,
 //    0.32 0.12 1.23 1.0 1 2 3 4
 //    0.32 0.12 1.23 1.0 1 2 3 4
 //
-void LoadSiftFeaturesFromTextFile(const std::string& path,
-                                  FeatureKeypoints* keypoints,
-                                  FeatureDescriptors* descriptors);
+inline void LoadSiftFeaturesFromTextFile(const std::string& path,
+                                         FeatureKeypoints* keypoints,
+                                         FeatureDescriptors* descriptors) {
+  throw std::logic_error("Not implemented");
+}
 
 // Match the given SIFT features on the CPU.
-void MatchSiftFeaturesCPUBruteForce(const SiftMatchingOptions& match_options,
-                                    const FeatureDescriptors& descriptors1,
-                                    const FeatureDescriptors& descriptors2,
-                                    FeatureMatches* matches);
-void MatchSiftFeaturesCPUFLANN(const SiftMatchingOptions& match_options,
-                               const FeatureDescriptors& descriptors1,
-                               const FeatureDescriptors& descriptors2,
-                               FeatureMatches* matches);
-void MatchSiftFeaturesCPU(const SiftMatchingOptions& match_options,
-                          const FeatureDescriptors& descriptors1,
-                          const FeatureDescriptors& descriptors2,
-                          FeatureMatches* matches);
-void MatchGuidedSiftFeaturesCPU(const SiftMatchingOptions& match_options,
-                                const FeatureKeypoints& keypoints1,
-                                const FeatureKeypoints& keypoints2,
-                                const FeatureDescriptors& descriptors1,
-                                const FeatureDescriptors& descriptors2,
-                                TwoViewGeometry* two_view_geometry);
+inline void MatchSiftFeaturesCPUBruteForce(
+    const SiftMatchingOptions& match_options,
+    const FeatureDescriptors& descriptors1,
+    const FeatureDescriptors& descriptors2, FeatureMatches* matches) {
+  throw std::logic_error("Not implemented");
+}
+inline void MatchSiftFeaturesCPUFLANN(const SiftMatchingOptions& match_options,
+                                      const FeatureDescriptors& descriptors1,
+                                      const FeatureDescriptors& descriptors2,
+                                      FeatureMatches* matches) {
+  throw std::logic_error("Not implemented");
+}
+inline void MatchSiftFeaturesCPU(const SiftMatchingOptions& match_options,
+                                 const FeatureDescriptors& descriptors1,
+                                 const FeatureDescriptors& descriptors2,
+                                 FeatureMatches* matches) {
+  throw std::logic_error("Not implemented");
+}
+inline void MatchGuidedSiftFeaturesCPU(const SiftMatchingOptions& match_options,
+                                       const FeatureKeypoints& keypoints1,
+                                       const FeatureKeypoints& keypoints2,
+                                       const FeatureDescriptors& descriptors1,
+                                       const FeatureDescriptors& descriptors2,
+                                       TwoViewGeometry* two_view_geometry) {
+  throw std::logic_error("Not implemented");
+}
 
 // Create a SiftGPU feature matcher. Note that if CUDA is not available or the
 // gpu_index is -1, the OpenGLContextManager must be created in the main thread
 // of the Qt application before calling this function. The same SiftMatchGPU
 // instance can be used to match features between multiple image pairs.
-bool CreateSiftGPUMatcher(const SiftMatchingOptions& match_options,
-                          SiftMatchGPU* sift_match_gpu);
+inline bool CreateSiftGPUMatcher(const SiftMatchingOptions& match_options,
+                                 SiftMatchGPU* sift_match_gpu) {
+  throw std::logic_error("Not implemented");
+}
 
 // Match the given SIFT features on the GPU. If either of the descriptors is
 // NULL, the keypoints/descriptors will not be uploaded and the previously
 // uploaded descriptors will be reused for the matching.
-void MatchSiftFeaturesGPU(const SiftMatchingOptions& match_options,
-                          const FeatureDescriptors* descriptors1,
-                          const FeatureDescriptors* descriptors2,
-                          SiftMatchGPU* sift_match_gpu,
-                          FeatureMatches* matches);
-void MatchGuidedSiftFeaturesGPU(const SiftMatchingOptions& match_options,
-                                const FeatureKeypoints* keypoints1,
-                                const FeatureKeypoints* keypoints2,
-                                const FeatureDescriptors* descriptors1,
-                                const FeatureDescriptors* descriptors2,
-                                SiftMatchGPU* sift_match_gpu,
-                                TwoViewGeometry* two_view_geometry);
+inline void MatchSiftFeaturesGPU(const SiftMatchingOptions& match_options,
+                                 const FeatureDescriptors* descriptors1,
+                                 const FeatureDescriptors* descriptors2,
+                                 SiftMatchGPU* sift_match_gpu,
+                                 FeatureMatches* matches) {
+  throw std::logic_error("Not implemented");
+}
+inline void MatchGuidedSiftFeaturesGPU(const SiftMatchingOptions& match_options,
+                                       const FeatureKeypoints* keypoints1,
+                                       const FeatureKeypoints* keypoints2,
+                                       const FeatureDescriptors* descriptors1,
+                                       const FeatureDescriptors* descriptors2,
+                                       SiftMatchGPU* sift_match_gpu,
+                                       TwoViewGeometry* two_view_geometry) {
+  throw std::logic_error("Not implemented");
+}
 
 }  // namespace colmap
 

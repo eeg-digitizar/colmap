@@ -30,9 +30,10 @@ DAMAGE.
 #define MY_TIME_INCLUDED
 
 #include <string.h>
-#include <sys/timeb.h>
 #ifndef _WIN32
 #include <sys/time.h>
+#else
+#include <sys/timeb.h>
 #endif // _WIN32
 
 inline double Time( void )
